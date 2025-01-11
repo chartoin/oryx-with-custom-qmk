@@ -100,9 +100,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 const uint16_t PROGMEM combo0[] = {MT(MOD_RGUI, KC_J), MT(MOD_RSFT, KC_K),
                                    COMBO_END};
+const uint16_t PROGMEM combo1[] = {KC_Z, KC_X, COMBO_END};
+const uint16_t PROGMEM combo2[] = {KC_X, KC_C, COMBO_END};
+const uint16_t PROGMEM combo3[] = {KC_C, LT(3, KC_V), COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
     COMBO(combo0, KC_ESCAPE),
+    COMBO(combo1, LGUI(KC_X)),
+    COMBO(combo2, LGUI(KC_C)),
+    COMBO(combo3, LGUI(KC_V)),
 };
 
 void matrix_scan_user(void) { achordion_task(); }
