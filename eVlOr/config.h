@@ -6,7 +6,7 @@
 #define PERMISSIVE_HOLD
 
 #define USB_SUSPEND_WAKEUP_DELAY 0
-#define SERIAL_NUMBER "eVlOr/OaR4Kg"
+#define SERIAL_NUMBER "eVlOr/v6N36r"
 #define LAYER_STATE_8BIT
 #define COMBO_COUNT 4
 
