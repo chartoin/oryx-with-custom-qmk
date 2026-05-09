@@ -11,11 +11,11 @@ enum custom_keycodes {
 
 
 
-#define DUAL_FUNC_0 LT(1, KC_F22)
-#define DUAL_FUNC_1 LT(4, KC_H)
-#define DUAL_FUNC_2 LT(2, KC_T)
-#define DUAL_FUNC_3 LT(7, KC_F23)
-#define DUAL_FUNC_4 LT(10, KC_F2)
+#define DUAL_FUNC_0 LT(3, KC_F10)
+#define DUAL_FUNC_1 LT(12, KC_F18)
+#define DUAL_FUNC_2 LT(13, KC_U)
+#define DUAL_FUNC_3 LT(6, KC_F24)
+#define DUAL_FUNC_4 LT(5, KC_J)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_moonlander(
@@ -68,6 +68,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT(
+  'L', 'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 'R',
+  'L', 'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 'R',
+  'L', 'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 'R',
+  'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R',
+  'L', 'L', 'L', 'L', 'L', '*', '*', 'R', 'R', 'R', 'R', 'R',
+                 '*', '*', '*', '*', '*', '*'
+);
 
 const uint16_t PROGMEM combo0[] = { MT(MOD_RGUI, KC_J), MT(MOD_RSFT, KC_K), COMBO_END};
 const uint16_t PROGMEM combo1[] = { KC_Z, KC_X, COMBO_END};
@@ -87,9 +95,24 @@ combo_t key_combos[COMBO_COUNT] = {
 
 
 
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+  case QK_MODS ... QK_MODS_MAX:
+    // Mouse and consumer keys (volume, media) with modifiers work inconsistently across operating systems,
+    // this makes sure that modifiers are always applied to the key that was pressed.
+    if (IS_CONSUMER_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode))) {
+      if (record->event.pressed) {
+        add_mods(QK_MODS_GET_MODS(keycode));
+        send_keyboard_report();
+        wait_ms(2);
+        register_code(QK_MODS_GET_BASIC_KEYCODE(keycode));
+        return false;
+      } else {
+        wait_ms(2);
+        del_mods(QK_MODS_GET_MODS(keycode));
+      }
+    }
+    break;
 
     case DUAL_FUNC_0:
       if (record->tap.count > 0) {
@@ -100,9 +123,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       } else {
         if (record->event.pressed) {
-          register_code16(KC_CAPS);
+          register_code16(KC_F13);
         } else {
-          unregister_code16(KC_CAPS);
+          unregister_code16(KC_F13);
         }  
       }  
       return false;
